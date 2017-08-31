@@ -1,7 +1,7 @@
 ''' 
     Odoo - Smart AdServer Connector
     Wenn einen neuen Auftrag im Odoo angelegt wird,
-    soll der Connector den Auftrag automatisch im SmartAdServer erstellen
+    soll der Connector den Auftrag automatisch in SmartAdServer einpflegen
 '''
 
 ''' 

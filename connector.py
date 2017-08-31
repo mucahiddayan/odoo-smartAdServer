@@ -56,8 +56,8 @@ class Advertiser():
         r = requests.get(
             self.__api_url+str(self.__networkID)+'/advertisers',
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
-            params = params
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            params  = params
             )
         print(r.url)
         return r.json()
@@ -66,7 +66,7 @@ class Advertiser():
         r = requests.get(
             self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID),
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password)
+            auth    = HTTPBasicAuth(self.__username, self.__password)
             )
         print(r.url)
         return r.json()
@@ -75,8 +75,8 @@ class Advertiser():
         r = requests.post(
             self.__api_url+str(self.__networkID)+'/advertisers/',
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
-            data = params
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = params
             )
         print(r.url)
         return r.json()
@@ -85,7 +85,7 @@ class Advertiser():
         r = requests.post(
             self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID)+'/'+subAction,
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
+            auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
@@ -94,8 +94,8 @@ class Advertiser():
         r = requests.put(
             self.__api_url+str(self.__networkID)+'/advertisers/',
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
-            data = params
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = params
             )
         print(r.url)
         return r.json()
@@ -104,7 +104,7 @@ class Advertiser():
         r = requests.delete(
             self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID),
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
+            auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
@@ -113,7 +113,7 @@ class Advertiser():
         r = requests.delete(
             self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID)+'/'+subAction,
             headers = self.__headers,
-            auth=HTTPBasicAuth(self.__username, self.__password),
+            auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()

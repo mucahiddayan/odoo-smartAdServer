@@ -52,7 +52,17 @@ class Advertiser():
     
     def set_networkID(self,networkID):
         self.__networkID = networkID
-
+    
+    '''
+    userGroupIDs : intList
+        Filters the results according to the given user group ids
+    ids : intList
+        Filters the results according to the given ids 
+    name : String
+        Filters the results according to the fact they contain the name you gave
+    isArchived : OptionalBool
+        State if this item can be used (not deprecated neither removed neither...)
+    '''
     def get_all(self,params):
         r = requests.get(
             self.__api_url+str(self.__networkID)+self.__type,
@@ -62,10 +72,14 @@ class Advertiser():
             )
         print(r.url)
         return r.json()
-
-    def get(self,advertiserID):
+    
+    '''
+    id : Int32
+        Id of the advertiser
+    '''
+    def get(self,id,subAction = ''):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
@@ -91,11 +105,11 @@ class Advertiser():
         contactEmail of advertiser        
     contactPhoneNumber: string
         contactPhoneNumber of advertiser
-    isArchived: string
+    isArchived: OptionalBool
         isArchived of advertiser        
-    userGroupId: string
+    userGroupId: intList
         userGroupId of advertiser        
-    agencyIds: string
+    agencyIds: intList
         agencyIds of advertiser            
     domainListId: string
         domainListId of advertiser        
@@ -110,15 +124,25 @@ class Advertiser():
         print(r.url)
         return r.json()
     
-    def create_domain_blacklist(self,advertiserID,subAction):
+    '''
+    id: Int32
+        Id of the insertion
+    subAction: String
+        Allowed sub-actions: "domainLists" to add or replace the advertiser's domain list.
+    file: FileAndIsBlacklist
+        A generic model to wrap fileName, fileContent and isBlacklist
+    '''
+    def create_domain_blacklist(self,id,subAction):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
+            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
-
+    '''
+    same as create
+    '''
     def update(self,params):
         r = requests.put(
             self.__api_url+str(self.__networkID)+self.__type,
@@ -128,27 +152,41 @@ class Advertiser():
             )
         print(r.url)
         return r.json()
-
-    def delete(self,advertiserID):
+    '''
+    id
+        id of the resource you want to delete
+    '''
+    def delete(self,id):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
 
-    def delete_domain_blacklist(self,advertiserID,subAction):
+    '''
+    id: Int32
+        Id of the advertiser
+    subAction: String
+        Allowed sub-actions: * "domainLists" to remove the domain list of the advertiser from its targeting
+    '''
+    def delete_domain_blacklist(self,id,subAction):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
+            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
 
+
+'''
+Class Agencies.
+You can manage agencies by creating an instance of the class
+'''
 class Agencies():
-     def __init__(self,connector,networkID):
+    def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
         self.__password     = connector.get()['password']
@@ -161,7 +199,14 @@ class Agencies():
         self.__networkID = networkID
 
     '''
-    
+    userGroupIDs: intList
+        Filters the results according to the given user group ids
+    ids: String
+        Ids of a set of agencies to return
+    name
+        Filters the results according to the fact they contain the name you gave
+    isArchived
+        Allowed: False, or Both
     '''
     def get_all(self,params):
         r = requests.get(
@@ -173,9 +218,13 @@ class Agencies():
         print(r.url)
         return r.json()
 
-    def get(self,advertiserID):
+    '''
+    id: int32
+        id of the Agency
+    '''
+    def get(self,id,subAction = ''):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
@@ -183,6 +232,25 @@ class Agencies():
         return r.json()
     
     
+    ''' Creates a new agency
+    id: int32    
+        Agency's Id
+    name:
+        Agency's name
+    address
+        Agency's address
+    description
+        Agency's description
+    contactName
+        Agency's contact name
+    contactEmail
+        Agency's contact email
+    contactPhoneNumber
+        Agency's contact phone number
+    isArchived
+        False if this agency can be used as parameter in other methods. True if deprecated / removed / deactivated... so archived
+
+    '''
     def create(self,params):
         r = requests.post(
             self.__api_url+str(self.__networkID)+self.__type,
@@ -192,21 +260,10 @@ class Agencies():
             )
         print(r.url)
         return r.json()
-    
-    ''' 
-    advertiserID    : int
-    subAction       : string
+  
+    ''' Updates a agency
+    same as create
     '''
-    def create_domain_blacklist(self,advertiserID,subAction):
-        r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
-            headers = self.__headers,
-            auth    = HTTPBasicAuth(self.__username, self.__password),
-            )
-        print(r.url)
-        return r.json()
-
-
     def update(self,params):
         r = requests.put(
             self.__api_url+str(self.__networkID)+self.__type,
@@ -217,18 +274,18 @@ class Agencies():
         print(r.url)
         return r.json()
 
-    def delete(self,advertiserID):
+    def delete(self,id):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
 
-    def delete_domain_blacklist(self,advertiserID,subAction):
+    def delete_domain_blacklist(self,id,subAction):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
+            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )

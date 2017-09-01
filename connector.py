@@ -1,10 +1,10 @@
-''' 
-    Odoo - Smart AdServer Connector
-    Wenn einen neuen Auftrag im Odoo angelegt wird,
-    soll der Connector den Auftrag automatisch in SmartAdServer einpflegen
-'''
+#!/usr/bin/env python
+''' connector.py: Description of what connector does.
 
-''' 
+    Odoo - Smart AdServer Connector
+    Automatische Auftragsverwaltung für Smart AdServer über Odoo
+
+requests module beispiele
 r = requests.post(URL, data = {'key':'value'})
 r = requests.put('http://httpbin.org/put', data = {'key':'value'})
 r = requests.delete(URL)
@@ -19,6 +19,14 @@ r = requests.get('http://httpbin.org/get', params=payload)
 import requests
 from requests.auth import HTTPBasicAuth
 import json
+
+
+__author__      = "Mücahid Dayan"
+__copyright__   = "Copyright 2017"
+__version__     = "1.0.0"
+__maintainer__  = "Mücahid Dayan"
+__email__       = "mucahid@dayan.one"
+__status__      = "Development"
 
 class Connector():
     

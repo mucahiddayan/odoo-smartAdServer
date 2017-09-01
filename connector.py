@@ -87,39 +87,41 @@ class Advertiser():
         return r.json()
 
     '''
-    id: string
-        id of advertiser                  
-    name: string
-        name of advertiser              
-    description: string
-        description of advertiser        
-    isDirectAdvertiser: string
-        isDirectAdvertiser of advertiser
-    isHouseAds: string
-        isHouseAds of advertiser        
-    address: string
-        address of advertiser            
-    contactName: string
-        contactName of advertiser        
-    contactEmail: string
-        contactEmail of advertiser        
-    contactPhoneNumber: string
-        contactPhoneNumber of advertiser
-    isArchived: OptionalBool
-        isArchived of advertiser        
-    userGroupId: intList
-        userGroupId of advertiser        
-    agencyIds: intList
-        agencyIds of advertiser            
-    domainListId: string
-        domainListId of advertiser        
+    advertiser: {    
+        id: string
+            id of advertiser                  
+        name: string
+            name of advertiser              
+        description: string
+            description of advertiser        
+        isDirectAdvertiser: string
+            isDirectAdvertiser of advertiser
+        isHouseAds: string
+            isHouseAds of advertiser        
+        address: string
+            address of advertiser            
+        contactName: string
+            contactName of advertiser        
+        contactEmail: string
+            contactEmail of advertiser        
+        contactPhoneNumber: string
+            contactPhoneNumber of advertiser
+        isArchived: OptionalBool
+            isArchived of advertiser        
+        userGroupId: intList
+            userGroupId of advertiser        
+        agencyIds: intList
+            agencyIds of advertiser            
+        domainListId: string
+            domainListId of advertiser 
+     }      
     '''
-    def create(self,params):
+    def create(self,advertiser):
         r = requests.post(
             self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
-            data    = params
+            data    = advertiser
             )
         print(r.url)
         return r.json()
@@ -143,12 +145,12 @@ class Advertiser():
     '''
     same as create
     '''
-    def update(self,params):
+    def update(self,advertiser):
         r = requests.put(
             self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
-            data    = params
+            data    = advertiser
             )
         print(r.url)
         return r.json()
@@ -182,10 +184,10 @@ class Advertiser():
 
 
 '''
-Class Agencies.
+====================================================== Class Agencies ======================================================
 You can manage agencies by creating an instance of the class
 '''
-class Agencies():
+class Agency():
     def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
@@ -233,30 +235,31 @@ class Agencies():
     
     
     ''' Creates a new agency
-    id: int32    
-        Agency's Id
-    name:
-        Agency's name
-    address
-        Agency's address
-    description
-        Agency's description
-    contactName
-        Agency's contact name
-    contactEmail
-        Agency's contact email
-    contactPhoneNumber
-        Agency's contact phone number
-    isArchived
-        False if this agency can be used as parameter in other methods. True if deprecated / removed / deactivated... so archived
-
+    agency: {
+        id: int32    
+            Agency's Id
+        name:
+            Agency's name
+        address
+            Agency's address
+        description
+            Agency's description
+        contactName
+            Agency's contact name
+        contactEmail
+            Agency's contact email
+        contactPhoneNumber
+            Agency's contact phone number
+        isArchived
+            False if this agency can be used as parameter in other methods. True if deprecated / removed / deactivated... so archived
+    }
     '''
-    def create(self,params):
+    def create(self,agency):
         r = requests.post(
             self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
-            data    = params
+            data    = agency
             )
         print(r.url)
         return r.json()
@@ -264,16 +267,19 @@ class Agencies():
     ''' Updates a agency
     same as create
     '''
-    def update(self,params):
+    def update(self,agency):
         r = requests.put(
             self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
-            data    = params
+            data    = agency
             )
         print(r.url)
         return r.json()
 
+    ''' deletes an agency
+    id: int32
+    '''
     def delete(self,id):
         r = requests.delete(
             self.__api_url+str(self.__networkID)+self.__type+str(id),
@@ -282,52 +288,270 @@ class Agencies():
             )
         print(r.url)
         return r.json()
+    
 
-    def delete_domain_blacklist(self,id,subAction):
-        r = requests.delete(
+''' ====================================================== Class Campaign ======================================================
+
+'''
+class Campaign():
+
+    def __init__(self,connector):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/campaigns/'
+        self.__state        = '/campaignstatus/'
+    
+    def set_networkID(self,networkID):
+        self.__networkID = networkID
+    
+    ''' Returns all the campaigns
+    campaign: {    
+        ids: IntList
+            Filters the results according to the given ids
+        name: String
+            Filters the results according to the fact they contain the name you gave
+        advertiserIds: IntList
+            Filters the results according to the given advertiser ids
+        agencyIds: IntList
+            Filters the results according to the given agency ids
+        campaignStatusIds: IntList
+            Filters the results according to their campaign status (see "campaignStatus" resource)
+        isArchived: OptionalBool
+            Allowed: False, or Both
+    }
+    '''
+    def get_all(self,campaign):
+        r = requests.get(
+                    self.__api_url+str(self.__networkID)+self.__type,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = params
+                    )
+        print(r.url)
+        return r.json()
+
+    '''
+    id: int32
+        id of the Campaign
+    '''
+    def get(self,id,subAction = ''):
+        r = requests.get(
             self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print(r.url)
+        return r.json()
+    
+    ''' Creates a new campaign
+    campaign : {
+        id  
+            Campaign Id
+        name  
+            Campaign Name
+        advertiserId  
+            Advertiser Id
+        agencyId  
+            Id of the agency linked to the campaign (optional).
+        campaignStatusId  
+            Id of the campaign status
+        startDate  
+            Campaign start date
+        endDate  
+            Campaign end date
+        globalCapping  
+            Set the default global capping configuration for next created insertion
+        visitCapping  
+            Set the default capping per visit configuration for next created insertion
+        isArchived  
+            False if you can update the campaign, true otherwise
+    }
+    
+    '''
+    def create(self,campaign):
+        r = requests.post(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = campaign
+            )
+        print(r.url)
+        return r.json()
+    
+    ''' updates a given agency
+    same as create
+    '''
+    def update(self,campaign):
+        r = requests.put(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = campaign
+            )
+        print(r.url)
+        return r.json()
+
+    ''' deletes an agency
+    id: int32
+    '''
+    def delete(self,id):
+        r = requests.delete(
+            self.__api_url+str(self.__networkID)+self.__type+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
+    
+    ''' Returns all the campaign status
+    ids: intList
+        Filters the results according to the given ids
+    '''
+    def get_statuses(self,ids):
+        r = requests.get(
+                    self.__api_url+str(self.__networkID)+self.__state,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = ids
+                    )
+        print(r.url)
+        return r.json()
+    
+    ''' Returns the campaign status with the given id
+    id:int32
+        The unique ID of the resource you want to retrieve
+    '''
+    def get_status(self,id):
+        r = requests.get(
+                    self.__api_url+str(self.__networkID)+self.__state+'/'+id,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = ids
+                    )
+        print(r.url)
+        return r.json()
 
+''' ====================================================== Class CreativeSize ======================================================
 
-connector = {
-    "username" : 'root',
-    "password" : 12323,    
-}
+'''
+class CreativeSize():
+    
+    def __init__(self,connector):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/creativesizes/'
+    
+    def set_networkID(self,networkID):
+        self.__networkID = networkID
+    
+    ''' Returns all the creatives sizes
+    params: {
+        ids: IntList 
+            Filters the results according to the given ids
+        width: Int32 
+            Filters the results according to the given width
+        height: Int32 
+            Filters the results according to the given height
+    } 
+    '''
+    def get_all(self,params):
+        r = requests.get(
+                    self.__api_url+str(self.__networkID)+self.__type,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = params
+                    )
+        print(r.url)
+        return r.json()
 
-create_update_advertiser = {
-    "id"                : 21,
-    "name"              : 'name',
-    "description"       : "desc",
-    "isDirectAdvertiser": "true",
-    "isHouseAds"        : "true",
-    "address"           : "address",
-    "contactName"       : "contactName",
-    "contactEmail"      : "contactEmail",
-    "contactPhoneNumber": "contactPhoneNumber",
-    "isArchived"        : "true",
-    "userGroupId"       : 22,
-    "agencyIds"         : 23,
-    "domainListId"      : 24,
+    '''
+    id: int32
+        id of the CreativeSize
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print(r.url)
+        return r.json()
+    
+    ''' Creates a new CreativeSize
+    size : {
+        id  
+            Size's id
+        width  
+            Size's width (in pixels)
+        height  
+            Size's height (in pixels)
     }
+    
+    '''
+    def create(self,size):
+        r = requests.post(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = size
+            )
+        print(r.url)
+        return r.json()
 
-get_advertisers = {
-    "userGroupIDs"      : 30,
-    "ids"               : "31,32,33",
-    "name"              : "Name",
-    "isArchived"        : "false"
-}
+''' ====================================================== Class CreativeType ======================================================
 
-my_connector = Connector(**connector);
-my_advertiser= Advertiser(my_connector,1563);
+'''
+class CreativeType():
 
-print my_advertiser.get_all(get_advertisers)['message']
-print my_advertiser.get(2)['message']
-print my_advertiser.create(create_update_advertiser)['message']
-print my_advertiser.update(create_update_advertiser)['message']
-print my_advertiser.create_domain_blacklist(1,"domainList")['message']
-print my_advertiser.delete(1)['message']
-print my_advertiser.delete_domain_blacklist(1,"domainList")['message']
+    def __init__(self,connector):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/creativetypes/'
+    
+    def set_networkID(self,networkID):
+        self.__networkID = networkID
+    
+    ''' Returns all the creatives sizes
+    params: {
+        ids IntList 
+            Filters the results according to the given ids
+    } 
+    '''
+    def get_all(self,params):
+        r = requests.get(
+                    self.__api_url+str(self.__networkID)+self.__type,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = params
+                    )
+        print(r.url)
+        return r.json()
+
+    '''
+    id: int32
+        id of the CreativeType
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print(r.url)
+        return r.json()
+    
+''' ====================================================== Class CustomFormats ======================================================
+
+'''

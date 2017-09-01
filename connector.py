@@ -48,13 +48,14 @@ class Advertiser():
         self.__headers      = connector.get()['headers']
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
+        self.__type         = '/advertisers/'
     
     def set_networkID(self,networkID):
         self.__networkID = networkID
 
     def get_all(self,params):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+'/advertisers',
+            self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             params  = params
@@ -64,16 +65,44 @@ class Advertiser():
 
     def get(self,advertiserID):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
         print(r.url)
         return r.json()
 
+    '''
+    id: string
+        id of advertiser                  
+    name: string
+        name of advertiser              
+    description: string
+        description of advertiser        
+    isDirectAdvertiser: string
+        isDirectAdvertiser of advertiser
+    isHouseAds: string
+        isHouseAds of advertiser        
+    address: string
+        address of advertiser            
+    contactName: string
+        contactName of advertiser        
+    contactEmail: string
+        contactEmail of advertiser        
+    contactPhoneNumber: string
+        contactPhoneNumber of advertiser
+    isArchived: string
+        isArchived of advertiser        
+    userGroupId: string
+        userGroupId of advertiser        
+    agencyIds: string
+        agencyIds of advertiser            
+    domainListId: string
+        domainListId of advertiser        
+    '''
     def create(self,params):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+'/advertisers/',
+            self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = params
@@ -83,7 +112,7 @@ class Advertiser():
     
     def create_domain_blacklist(self,advertiserID,subAction):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID)+'/'+subAction,
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
@@ -92,7 +121,7 @@ class Advertiser():
 
     def update(self,params):
         r = requests.put(
-            self.__api_url+str(self.__networkID)+'/advertisers/',
+            self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = params
@@ -102,7 +131,7 @@ class Advertiser():
 
     def delete(self,advertiserID):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID),
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
@@ -111,12 +140,101 @@ class Advertiser():
 
     def delete_domain_blacklist(self,advertiserID,subAction):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+'/advertisers/'+str(advertiserID)+'/'+subAction,
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
         print(r.url)
         return r.json()
+
+class Agencies():
+     def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/agencies/'
+    
+    def set_networkID(self,networkID):
+        self.__networkID = networkID
+
+    '''
+    
+    '''
+    def get_all(self,params):
+        r = requests.get(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            params  = params
+            )
+        print(r.url)
+        return r.json()
+
+    def get(self,advertiserID):
+        r = requests.get(
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print(r.url)
+        return r.json()
+    
+    
+    def create(self,params):
+        r = requests.post(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = params
+            )
+        print(r.url)
+        return r.json()
+    
+    ''' 
+    advertiserID    : int
+    subAction       : string
+    '''
+    def create_domain_blacklist(self,advertiserID,subAction):
+        r = requests.post(
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            )
+        print(r.url)
+        return r.json()
+
+
+    def update(self,params):
+        r = requests.put(
+            self.__api_url+str(self.__networkID)+self.__type,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = params
+            )
+        print(r.url)
+        return r.json()
+
+    def delete(self,advertiserID):
+        r = requests.delete(
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            )
+        print(r.url)
+        return r.json()
+
+    def delete_domain_blacklist(self,advertiserID,subAction):
+        r = requests.delete(
+            self.__api_url+str(self.__networkID)+self.__type+str(advertiserID)+'/'+subAction,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            )
+        print(r.url)
+        return r.json()
+
 
 connector = {
     "username" : 'root',

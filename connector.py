@@ -471,7 +471,7 @@ class Campaign():
 '''
 class CreativeSize():
     
-    def __init__(self,connector):
+    def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
         self.__password     = connector.get()['password']
@@ -544,7 +544,7 @@ class CreativeSize():
 '''
 class CreativeType():
 
-    def __init__(self,connector):
+    def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
         self.__password     = connector.get()['password']
@@ -587,13 +587,13 @@ class CreativeType():
         print("API URL: '"+r.url+"'")
         return r.json()
 
-''' ====================================================== Class Keywords ======================================================
+''' ====================================================== Class platforms ======================================================
 
 '''
 
 class Keyword:
     
-    def __init__(self,connector):
+    def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
         self.__password     = connector.get()['password']
@@ -654,6 +654,56 @@ class Keyword:
             )
         print("API URL: '"+r.url+"'")
         return r.json()
+
+''' ====================================================== Class Platform ======================================================
+
+'''
+
+class Platform:
+    def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/platforms/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the platforms
+    params: {
+        ids IntList 
+            Filters the results according to the given ids
+    } 
+    '''
+    def get_all(self,params={}):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = params
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    '''
+    id: int32
+        id of the platform
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+   
 
 ''' ====================================================== Class CustomFormats ======================================================
 

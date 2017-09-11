@@ -1,4 +1,4 @@
-from connector import Connector,Agency,Advertiser,Campaign 
+from connector import Connector,Agency,Advertiser,Campaign, Platform
 import config
 
 # ====================================================== MAIN ======================================================
@@ -73,3 +73,7 @@ my_campaign  = Campaign(my_connector,config.NETWORK_ID)
 my_agency    = Agency(my_connector,config.NETWORK_ID)
 print my_agency.update(new_agency)
 #print my_agency.get_all()
+
+my_platform = Platform(my_connector,config.NETWORK_ID)
+#platforms =  my_platform.get_all()
+#print my_platform.get_all()

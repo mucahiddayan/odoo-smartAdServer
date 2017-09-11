@@ -1,42 +1,50 @@
 from connector import Connector,Agency,Advertiser,Campaign 
+import config
 
 # ====================================================== MAIN ======================================================
 
 connector = {
-    "username" : 'root',
-    "password" : 12323,    
+    "username" : config.USERNAME,
+    "password" : config.PASSWORD,    
+    "apiurl"   : config.API_URL
 }
 
-create_update_advertiser = {
-    "id"                : 21,
+new_advertiser = {
+    "id"                : 1,
     "name"              : 'name',
     "description"       : "desc",
-    "isDirectAdvertiser": "true",
-    "isHouseAds"        : "true",
+    "isDirectAdvertiser": "True",
+    "isHouseAds"        : "True",
     "address"           : "address",
     "contactName"       : "contactName",
     "contactEmail"      : "contactEmail",
     "contactPhoneNumber": "contactPhoneNumber",
-    "isArchived"        : "true",
-    "userGroupId"       : 22,
-    "agencyIds"         : 23,
-    "domainListId"      : 24,
+    "isArchived"        : "True",
+    "userGroupId"       : 2,
+    "agencyIds"         : [1],
+    "domainListId"      : 1,
     }
 
+new_campaign = {
+    "id"                : 1,
+    "name"              : "Test Campaign",
+    "advertiserId"      : 2,
+    "campaignStatusId"  : 1,
+    "startDate"         : 1,
+}
+
 get_advertisers = {
-    "userGroupIDs"      : 30,
-    "ids"               : "31,32,33",
+    "userGroupIDs"      : 2,
+    #"ids"               : "31,32,33",
     "name"              : "Name",
     "isArchived"        : "false"
 }
 
 my_connector = Connector(**connector);
-my_advertiser= Advertiser(my_connector,1563);
+my_advertiser= Advertiser(my_connector,config.NETWORK_ID);
+my_campaign  = Campaign(my_connector,config.NETWORK_ID)
+my_agency    = Agency(my_connector,config.NETWORK_ID)
 
-print my_advertiser.get_all(get_advertisers)['message']
-print my_advertiser.get(2)['message']
-print my_advertiser.create(create_update_advertiser)['message']
-print my_advertiser.update(create_update_advertiser)['message']
-print my_advertiser.create_domain_blacklist(1,"domainList")['message']
-print my_advertiser.delete(1)['message']
-print my_advertiser.delete_domain_blacklist(1,"domainList")['message']
+#print my_campaign.get_statuses({"ids":"1,2"})
+print my_campaign.get_status(2)
+#my_agency.create()

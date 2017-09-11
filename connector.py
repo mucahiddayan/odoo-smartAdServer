@@ -2,7 +2,7 @@
 ''' connector.py: Description of what connector does.
 
     Odoo - Smart AdServer Connector
-    Automatische Auftragsverwaltung für Smart AdServer über Odoo
+    Automatische Auftragsverwaltung fuer Smart AdServer ueber Odoo
 
 requests module beispiele
 r = requests.post(URL, data = {'key':'value'})
@@ -21,19 +21,19 @@ from requests.auth import HTTPBasicAuth
 import json
 
 
-__author__      = "Mücahid Dayan"
+__author__      = "Muecahid Dayan"
 __copyright__   = "Copyright 2017"
 __version__     = "1.0.0"
-__maintainer__  = "Mücahid Dayan"
+__maintainer__  = "Muecahid Dayan"
 __email__       = "mucahid@dayan.one"
 __status__      = "Development"
 
 class Connector():
     
-    def __init__(self,username,password):
+    def __init__(self,username,password,apiurl = 'https://manage.smartadserverapis.com/'):
         self.__username     = username
         self.__password     = password
-        self.__api_url      = 'https://manage.smartadserverapis.com/'
+        self.__api_url      = apiurl
         self.__headers      = { "Content-Type": "application/json; charset=utf-8" }
     
     def get(self):
@@ -71,7 +71,7 @@ class Advertiser():
     isArchived : OptionalBool
         State if this item can be used (not deprecated neither removed neither...)
     '''
-    def get_all(self,params):
+    def get_all(self,params={}):
         r = requests.get(
             self.__api_url+str(self.__networkID)+self.__type,
             headers = self.__headers,
@@ -303,7 +303,7 @@ class Agency():
 '''
 class Campaign():
 
-    def __init__(self,connector):
+    def __init__(self,connector,networkID):
         self.__connector    = connector
         self.__username     = connector.get()['username']
         self.__password     = connector.get()['password']
@@ -419,7 +419,7 @@ class Campaign():
     ids: intList
         Filters the results according to the given ids
     '''
-    def get_statuses(self,ids):
+    def get_statuses(self,ids=""):
         r = requests.get(
                     self.__api_url+str(self.__networkID)+self.__state,
                     headers = self.__headers,
@@ -435,10 +435,9 @@ class Campaign():
     '''
     def get_status(self,id):
         r = requests.get(
-                    self.__api_url+str(self.__networkID)+self.__state+'/'+id,
+                    self.__api_url+str(self.__networkID)+self.__state+'/'+str(id),
                     headers = self.__headers,
                     auth    = HTTPBasicAuth(self.__username, self.__password),
-                    params  = ids
                     )
         print(r.url)
         return r.json()

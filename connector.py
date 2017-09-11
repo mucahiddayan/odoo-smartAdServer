@@ -30,20 +30,21 @@ __status__      = "Development"
 
 class Connector():
     
-    def __init__(self,username,password,apiurl = 'https://manage.smartadserverapis.com/'):
-        self.__username     = username
-        self.__password     = password
-        self.__api_url      = apiurl
-        self.__headers      = { 
+    __headers_default = { 
             "Content-Type"                  : "application/json; charset=UTF-8",
             "Accept"                        : "application/json, text/plain, */*",
             "Accept-Encoding"               : "gzip, deflate, br",
             "Access-Control-Allow-Origin"   : "*",
             "Accept-Language"               : "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4",
             "Content-Encoding"              : "gzip",
-            "Connection"                    : "keep-alive",
-            
-            }
+            "Connection"                    : "keep-alive",            
+    }
+
+    def __init__(self,username,password,apiurl = 'https://manage.smartadserverapis.com/'):
+        self.__username     = username
+        self.__password     = password
+        self.__api_url      = apiurl
+        self.__headers      = self.__headers_default
     
     def get(self):
         return {
@@ -52,9 +53,16 @@ class Connector():
             "api_url"   : self.__api_url,
             "headers"   : self.__headers
         }
+
+    def add_to_headers(self,headers):
+        self.__headers.update(headers)
     
-    def set_headers(headers):
+    
+    def set_headers(self,headers):
         self.__headers = headers
+    
+    def reset_headers(self):
+        self.__headers = self.__headers_default
 
 class Advertiser():
             
@@ -216,6 +224,7 @@ class Agency():
         self.__networkID    = networkID
         self.__type         = '/agencies/'
         self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+
     
     def set_network_id(self,networkID):
         self.__networkID = networkID
@@ -295,7 +304,7 @@ class Agency():
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = agency
             )
-        print("API URL: '"+r.url+"'")
+        print "API URL: '"+r.url+"'"
         return r.json()
 
     ''' deletes an agency
@@ -405,7 +414,7 @@ class Campaign():
         print("API URL: '"+r.url+"'")
         return r.json()
     
-    ''' updates a given agency
+    ''' updates a given campaign
     same as create
     '''
     def update(self,campaign):
@@ -418,7 +427,7 @@ class Campaign():
         print("API URL: '"+r.url+"'")
         return r.json()
 
-    ''' deletes an agency
+    ''' deletes a campaign with given id
     id: int32
     '''
     def delete(self,id):
@@ -577,7 +586,75 @@ class CreativeType():
             )
         print("API URL: '"+r.url+"'")
         return r.json()
+
+''' ====================================================== Class Keywords ======================================================
+
+'''
+
+class Keyword:
     
+    def __init__(self,connector):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/keywords/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the keywords
+    params: {
+        ids IntList 
+            Filters the results according to the given ids
+    } 
+    '''
+    def get_all(self,params):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = params
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    '''
+    id: int32
+        id of the keyword
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+    '''
+    keyword : object : {
+        id:
+        name:
+        applicationId:
+        deliveryTargetingValue:
+        keywordGroupId:
+    }
+    '''
+    def create(self,keyword):
+        r = requests.post(
+            self.__finalUrl,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = keyword
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
 ''' ====================================================== Class CustomFormats ======================================================
 
 '''

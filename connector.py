@@ -34,7 +34,16 @@ class Connector():
         self.__username     = username
         self.__password     = password
         self.__api_url      = apiurl
-        self.__headers      = { "Content-Type": "application/json; charset=utf-8" }
+        self.__headers      = { 
+            "Content-Type"                  : "application/json; charset=UTF-8",
+            "Accept"                        : "application/json, text/plain, */*",
+            "Accept-Encoding"               : "gzip, deflate, br",
+            "Access-Control-Allow-Origin"   : "*",
+            "Accept-Language"               : "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4",
+            "Content-Encoding"              : "gzip",
+            "Connection"                    : "keep-alive",
+            
+            }
     
     def get(self):
         return {
@@ -56,10 +65,12 @@ class Advertiser():
         self.__headers      = connector.get()['headers']
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
-        self.__type         = '/advertisers/'
+        self.__type         = '/advertisers/'        
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
     
-    def set_networkID(self,networkID):
+    def set_network_id(self,networkID):
         self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
     
     '''
     userGroupIDs : intList
@@ -73,12 +84,12 @@ class Advertiser():
     '''
     def get_all(self,params={}):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             params  = params
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     '''
@@ -87,11 +98,11 @@ class Advertiser():
     '''
     def get(self,id,subAction = ''):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            self.__finalUrl+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -126,12 +137,12 @@ class Advertiser():
     '''
     def create(self,advertiser):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = advertiser
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     '''
@@ -144,23 +155,23 @@ class Advertiser():
     '''
     def create_domain_blacklist(self,id,subAction):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            self.__finalUrl+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     '''
     same as create
     '''
     def update(self,advertiser):
         r = requests.put(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = advertiser
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     '''
     id
@@ -168,11 +179,11 @@ class Advertiser():
     '''
     def delete(self,id):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            self.__finalUrl+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -183,11 +194,11 @@ class Advertiser():
     '''
     def delete_domain_blacklist(self,id,subAction):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            self.__finalUrl+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
 
@@ -204,9 +215,11 @@ class Agency():
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
         self.__type         = '/agencies/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
     
-    def set_networkID(self,networkID):
+    def set_network_id(self,networkID):
         self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
 
     '''
     userGroupIDs: intList
@@ -218,14 +231,14 @@ class Agency():
     isArchived
         Allowed: False, or Both
     '''
-    def get_all(self,params):
+    def get_all(self,params={}):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             params  = params
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -234,11 +247,11 @@ class Agency():
     '''
     def get(self,id,subAction = ''):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            self.__finalUrl+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     
@@ -264,12 +277,12 @@ class Agency():
     '''
     def create(self,agency):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = agency
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
   
     ''' Updates a agency
@@ -277,12 +290,12 @@ class Agency():
     '''
     def update(self,agency):
         r = requests.put(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = agency
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     ''' deletes an agency
@@ -290,11 +303,11 @@ class Agency():
     '''
     def delete(self,id):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            self.__finalUrl+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
 
@@ -311,10 +324,12 @@ class Campaign():
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
         self.__type         = '/campaigns/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
         self.__state        = '/campaignstatus/'
     
-    def set_networkID(self,networkID):
+    def set_network_id(self,networkID):
         self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
     
     ''' Returns all the campaigns
     campaign: {    
@@ -334,12 +349,12 @@ class Campaign():
     '''
     def get_all(self,campaign):
         r = requests.get(
-                    self.__api_url+str(self.__networkID)+self.__type,
+                    self.__finalUrl,
                     headers = self.__headers,
                     auth    = HTTPBasicAuth(self.__username, self.__password),
                     params  = params
                     )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -348,11 +363,11 @@ class Campaign():
     '''
     def get(self,id,subAction = ''):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(id)+'/'+subAction,
+            self.__finalUrl+str(id)+'/'+subAction,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     ''' Creates a new campaign
@@ -382,12 +397,12 @@ class Campaign():
     '''
     def create(self,campaign):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = campaign
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     ''' updates a given agency
@@ -395,12 +410,12 @@ class Campaign():
     '''
     def update(self,campaign):
         r = requests.put(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = campaign
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     ''' deletes an agency
@@ -408,11 +423,11 @@ class Campaign():
     '''
     def delete(self,id):
         r = requests.delete(
-            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            self.__finalUrl+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     ''' Returns all the campaign status
@@ -426,7 +441,7 @@ class Campaign():
                     auth    = HTTPBasicAuth(self.__username, self.__password),
                     params  = ids
                     )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     ''' Returns the campaign status with the given id
@@ -435,11 +450,11 @@ class Campaign():
     '''
     def get_status(self,id):
         r = requests.get(
-                    self.__api_url+str(self.__networkID)+self.__state+'/'+str(id),
+                    self.__api_url+str(self.__networkID)+self.__state+str(id),
                     headers = self.__headers,
                     auth    = HTTPBasicAuth(self.__username, self.__password),
                     )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
 ''' ====================================================== Class CreativeSize ======================================================
@@ -455,9 +470,11 @@ class CreativeSize():
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
         self.__type         = '/creativesizes/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
     
-    def set_networkID(self,networkID):
+    def set_network_id(self,networkID):
         self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
     
     ''' Returns all the creatives sizes
     params: {
@@ -471,12 +488,12 @@ class CreativeSize():
     '''
     def get_all(self,params):
         r = requests.get(
-                    self.__api_url+str(self.__networkID)+self.__type,
+                    self.__finalUrl,
                     headers = self.__headers,
                     auth    = HTTPBasicAuth(self.__username, self.__password),
                     params  = params
                     )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -485,11 +502,11 @@ class CreativeSize():
     '''
     def get(self,id):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            self.__finalUrl+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
     ''' Creates a new CreativeSize
@@ -505,12 +522,12 @@ class CreativeSize():
     '''
     def create(self,size):
         r = requests.post(
-            self.__api_url+str(self.__networkID)+self.__type,
+            self.__finalUrl,
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password),
             data    = size
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
 ''' ====================================================== Class CreativeType ======================================================
@@ -526,9 +543,11 @@ class CreativeType():
         self.__api_url      = connector.get()['api_url']
         self.__networkID    = networkID
         self.__type         = '/creativetypes/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
     
-    def set_networkID(self,networkID):
+    def set_network_id(self,networkID):
         self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
     
     ''' Returns all the creatives sizes
     params: {
@@ -538,12 +557,12 @@ class CreativeType():
     '''
     def get_all(self,params):
         r = requests.get(
-                    self.__api_url+str(self.__networkID)+self.__type,
+                    self.__finalUrl,
                     headers = self.__headers,
                     auth    = HTTPBasicAuth(self.__username, self.__password),
                     params  = params
                     )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
 
     '''
@@ -552,11 +571,11 @@ class CreativeType():
     '''
     def get(self,id):
         r = requests.get(
-            self.__api_url+str(self.__networkID)+self.__type+str(id),
+            self.__finalUrl+str(id),
             headers = self.__headers,
             auth    = HTTPBasicAuth(self.__username, self.__password)
             )
-        print(r.url)
+        print("API URL: '"+r.url+"'")
         return r.json()
     
 ''' ====================================================== Class CustomFormats ======================================================

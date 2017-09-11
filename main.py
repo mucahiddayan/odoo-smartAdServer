@@ -33,6 +33,17 @@ new_campaign = {
     "startDate"         : 1,
 }
 
+new_agency = {
+    "id"                : 1000006778,
+    "name"              : "Test Agency",
+    "address"           : "Koepenickerstr. 178-179",
+    "description"       : "Test Agency to test API Access",
+    "concactName"       : "Dayan",
+    "contactEmail"      : "it@pmedia.de",
+    "contactPhoneNumber": 33,
+    "isArchived"        : 'False'
+}
+
 get_advertisers = {
     "userGroupIDs"      : 2,
     #"ids"               : "31,32,33",
@@ -45,6 +56,12 @@ my_advertiser= Advertiser(my_connector,config.NETWORK_ID);
 my_campaign  = Campaign(my_connector,config.NETWORK_ID)
 my_agency    = Agency(my_connector,config.NETWORK_ID)
 
+#camStat = my_campaign.get_status(2)["name"]
+#print camStat
+#print type(camStat)
 #print my_campaign.get_statuses({"ids":"1,2"})
-print my_campaign.get_status(2)
-#my_agency.create()
+#print my_campaign.get_statuses()
+#print my_campaign.get_status(2)
+#print my_agency.create(new_agency)
+print my_agency.update(new_agency)
+#print my_agency.get_all()

@@ -1,4 +1,4 @@
-from connector import Connector,Agency,Advertiser,Campaign, Platform
+from connector import Connector, Agency, Advertiser, Campaign, Platform, Page, Site, UserGroup, User
 import config
 
 # ====================================================== MAIN ======================================================
@@ -77,3 +77,9 @@ print my_agency.update(new_agency)
 my_platform = Platform(my_connector,config.NETWORK_ID)
 #platforms =  my_platform.get_all()
 #print my_platform.get_all()
+
+my_usergroup = UserGroup(my_connector,config.NETWORK_ID)
+print my_usergroup.get()
+
+#my_user = User(my_connector,config.NETWORK_ID)
+#print my_user.get({"ids":'1,2,3,4,5'})

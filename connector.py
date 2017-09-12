@@ -702,9 +702,290 @@ class Platform:
             )
         print("API URL: '"+r.url+"'")
         return r.json()
-    
-   
 
-''' ====================================================== Class CustomFormats ======================================================
+''' ====================================================== Class Page ======================================================
 
 '''
+class Site:
+    def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/sites/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the sites
+    site: {    
+         ids IntList 
+            Filters the results according to the given ids
+        name String 
+            Filters the results according to their name
+        externalId String 
+            Filters the results according to their externalId
+        isArchived OptionalBool 
+            State if this item can be used (not deprecated neither removed neither...)
+        formatIds IntList 
+            If not null, returns only sites which have a page group supporting at least one of the provided formats
+    }
+    '''
+    def get_all(self,site):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = site
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    '''
+    id: int32
+        id of the Site
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+    ''' Creates a new site
+    site : {
+        id  
+            Site's unique ID
+        externalId  
+            External id, you can write what you want up to 50 characters
+        name  
+            Site's name declared in Smart
+        userGroupId  
+            Group's id of the user
+        url  
+            Site's url as declared in Smart
+        languageId  
+            Language's id of the site
+        isArchived  
+            False if this site can be used as parameter in other methods. True if deprecated / removed / deactivated... so archived
+        updatedAt  
+            Last modification date
+        iABCategoryIds  
+            List of IAB category ids accepted on this site
+
+    }
+    
+    '''
+    def create(self,site):
+        r = requests.post(
+            self.__finalUrl,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = site
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+    ''' updates a given site
+    same as create
+    '''
+    def update(self,site):
+        r = requests.put(
+            self.__finalUrl,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = site
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    ''' deletes a site with given id
+    id: int32
+    '''
+    def delete(self,id):
+        r = requests.delete(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+   
+''' ====================================================== Class Page ======================================================
+
+'''
+class Page:
+    def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/pages/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the pages
+    page: {    
+        ids IntList 
+            If not null, returns only pages specified in this parameter.
+        pageGroupIds IntList 
+            If not null, returns only pages that belong to one of pageGroups specified in this parameter.
+        name String 
+            If not null, returns only pages having this parameter in their name.
+        externalId String 
+            If not null, returns only pages having this parameter in their externalId.
+        isArchived OptionalBool 
+            Allowed: false, or both.
+    }
+    '''
+    def get_all(self,site):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params  = site
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    '''
+    id: int32
+        id of the Page
+    '''
+    def get(self,id):
+        r = requests.get(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password)
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+    ''' Creates a new page
+    page : {
+        id  
+            Page's unique Id
+        externalId  
+            External id, you can write what you want up to 50 characters
+        name  
+            Page's name with parent pages            For example: "Page/SubPage/PageName"            If the page has no parent page: "PageName"
+        fullName  
+            Page's name with site and parent pages            For example: "Site/Page/SubPage/PageName"
+        url  
+            URL of the page
+        pageGroupId  
+            Page group's Id
+        parentPageId  
+            Parent page's Id
+        isArchived  
+            False if this page can be used as parameter in other methods. True if deprecated / removed / deactivated... so archived
+        updatedAt  
+            Last modification date
+
+    }
+    
+    '''
+    def create(self,site):
+        r = requests.post(
+            self.__finalUrl,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = site
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+    
+    ''' updates a given page
+    same as create
+    '''
+    def update(self,site):
+        r = requests.put(
+            self.__finalUrl,
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            data    = site
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+    ''' deletes a page with given id
+    id: int32
+    '''
+    def delete(self,id):
+        r = requests.delete(
+            self.__finalUrl+str(id),
+            headers = self.__headers,
+            auth    = HTTPBasicAuth(self.__username, self.__password),
+            )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+''' ====================================================== Class UserGroup ======================================================
+
+'''
+
+class UserGroup:
+    def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/usergroups/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the user groups of your network '''
+    def get(self):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
+
+
+''' ====================================================== Class User ======================================================
+
+'''
+class User:
+    def __init__(self,connector,networkID):
+        self.__connector    = connector
+        self.__username     = connector.get()['username']
+        self.__password     = connector.get()['password']
+        self.__headers      = connector.get()['headers']
+        self.__api_url      = connector.get()['api_url']
+        self.__networkID    = networkID
+        self.__type         = '/users/'
+        self.__finalUrl     = self.__api_url+str(self.__networkID)+self.__type
+    
+    def set_network_id(self,networkID):
+        self.__networkID = networkID
+        self.__finalUrl  = self.__api_url+str(self.__networkID)+self.__type
+    
+    ''' Returns all the user groups of your network '''
+    def get(self,userIDs=''):
+        r = requests.get(
+                    self.__finalUrl,
+                    headers = self.__headers,
+                    auth    = HTTPBasicAuth(self.__username, self.__password),
+                    params = userIDs
+                    )
+        print("API URL: '"+r.url+"'")
+        return r.json()
